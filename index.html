@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<script src="http://meemoo.org/meemoo/v1/meemoo-min.js"></script>
+<script type="text/javascript" src="webmodular.js"></script>
+
+</head>
+<body onload="Init()">
+<div id="flash">
+<object id="flashsnd" CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=4,0,0,0" width=300 height=1>
+<param name=movie value="flashsnd.swf">
+<PARAM NAME=bgcolor VALUE=#FFFFFF>
+<PARAM NAME=LOOP VALUE=false>
+<PARAM NAME=quality VALUE=high>
+<embed src="flashsnd.swf" width=300 height=1 bgcolor=#FFFFFF loop=false quality=high pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" allowScriptAccess="always" </embedD>
+</object>
+</div>
+<select id="patch">
+<option value="clear">Clear All Patch</option>
+<option value="simple">1VCO+1VCA Most Simple Patch</option>
+<option value="basic" selected>2VCO=>1VCF=>1VCA Basic Patch</option>
+<option value="dual">2VCO=>2VCF=>2VCA Dual Channel Patch</option>
+<option value="lfo">LFO Modulation Patch</option>
+<option value="se">Sound Effect Patch</option>
+<option value="ring">Ring Patch</option>
+</select>
+<input type="button" value="Set" onclick="Setup()" />
+<br />
+<div>
+<canvas id="canvas" width="700" height="700" tabindex="1"><input type=button /></canvas>
+</div>
+<img id="panel" src="./panel.png" height=0/><br />
+<img id="knob" src="./knob.png" height=0 /><br />
+<img id="knob2" src="./knob2.png" height=0 /><br />
+<img id="knob3" src="./knob3.png" height=0 /><br />
+<img id="sw2" src="./sw2.png" height=0 /><br />
+<img id="sw3" src="./sw3.png" height=0 /><br />
+<img id="sw5" src="./sw5.png" height=0 /><br />
+<img id="slider" src="./sliderpos.png" height=0 /><br />
+<img id="keypress" src="./keypress.png" height=0 /><br />
+
+<script type="text/javascript">
+Meemoo.addInputs({
+  midi: {
+    action: function (v) {
+    
+    var msg = v.split(",");
+    switch (msg[0]) {
+        case "midi":
+            switch (parseInt(msg[1], 16) & 0xf0) {
+                case 0x80:
+                    app.keyboard.key.NoteOff(parseInt(msg[2], 16));
+                    break;
+                case 0x90:
+                    var velo = parseInt(msg[3], 16);
+                    if (velo > 0)
+                        app.keyboard.key.NoteOn(parseInt(msg[2], 16), velo);
+                    else
+                        app.keyboard.key.NoteOff(parseInt(msg[2], 16));
+                    break;
+                case 0xb0:
+                    if (parseInt(msg[2], 16) == 0x78) {
+                        app.keyboard.key.AllOff();
+                    }
+                    break;
+            }
+            break;
+    }
+
+    },
+    type: "string"
+  }
+}).addOutputs({
+  midi: {
+    type: "midi"
+  }
+});
+</script>
+
+</body>
+</html>

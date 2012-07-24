@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>mml2midi</title>
+  <meta name="author" content="automata.cc">
+  <meta name="description" content="type some code in Music Macro Language and it will be converted to MIDI" />
+
+  <!-- we have to include jquery and meemoo -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <script src="http://meemoo.org/meemoo/v1/meemoo-min.js"></script>
+
+  <!-- include your style too -->
+  <style type="text/css">
+  </style>
+
+</head>
+<button style="width:40px;height:100px" onmouseover="synth.NoteOn(60,64)" onmouseout="synth.NoteOff(60)">C </button>
+<button style="width:40px;height:100px" onmouseover="synth.NoteOn(61,64)" onmouseout="synth.NoteOff(61)">Db</button>
+<button style="width:40px;height:100px" onmouseover="synth.NoteOn(63,64)" onmouseout="synth.NoteOff(63)">Eb</button>
+<button style="width:40px;height:100px" onmouseover="synth.NoteOn(67,64)" onmouseout="synth.NoteOff(67)">G </button>
+<button style="width:40px;height:100px" onmouseover="synth.NoteOn(68,64)" onmouseout="synth.NoteOff(68)">Ab</button>
+
+<textarea id="code" rows="8" cols="20"></textarea>
+<body>
+  <script type="text/javascript">
+    function Synth() {
+        this.sy = null;
+        this.NoteOn = function(note, velo) {
+            Meemoo.send("midi", "midi,90," + note.toString(16) + "," + velo.toString(16));
+        }
+        this.NoteOff = function(note) {
+            Meemoo.send("midi", "midi,80," + note.toString(16) + ",0");
+        }
+        this.AllSoundOff = function() {
+            Meemoo.send("midi", "midi,b0,78,0");
+        }
+    }
+    var synth = new Synth();
+
+
+    Meemoo.setInfo({
+      title: "mml2midi",
+      author: "Vilson Vieira",
+      description: "type some code in Music Macro Language and it will be converted to MIDI"
+    }).addInputs({
+      mml: {
+        action: function (str) {
+          $("textarea#code").val(str);
+        },
+        type: "string"
+      },
+      send: {
+        action: function () {
+          var mmlString = $("textarea#code").val();
+          Meemoo.send("midi", mmlString);
+        },
+        type: "bang"
+      }
+    }).addOutputs({
+      midi: {
+        type: "string"
+      }
+    });
+  </script>
+</body>
+</html>
