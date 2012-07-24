@@ -2,7 +2,10 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <title>WebModular</title>
+    <meta name="author" content="g200kg">
+  <meta name="description" content="Modular synthesizer by g200kg" />
+
 <script src="http://meemoo.org/meemoo/v1/meemoo-min.js"></script>
 <script type="text/javascript" src="webmodular.js"></script>
 
@@ -42,7 +45,11 @@
 <img id="keypress" src="./keypress.png" height=0 /><br />
 
 <script type="text/javascript">
-Meemoo.addInputs({
+Meemoo.setInfo({
+  title: "WebModular",
+  author: "g200kg",
+  description: "Modular synthesizer by g200kg"
+    }).addInputs({
   midi: {
     action: function (v) {
     
